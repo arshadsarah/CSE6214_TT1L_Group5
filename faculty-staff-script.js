@@ -119,7 +119,10 @@ function statusClass(status) {
 
   if (cleanStatus === "confirmed") return "confirmed";
   if (cleanStatus === "pending approval") return "pending";
-  return "cancelled";
+  if (cleanStatus === "cancelled") return "cancelled";
+  if (cleanStatus === "rejected") return "cancelled";
+
+  return "pending";
 }
 
 function formatDate(dateText) {
@@ -189,8 +192,14 @@ function renderMyBookings() {
     table.innerHTML += `
       <tr>
         <td>${booking.id}</td>
-        <td>${booking.resource}</td>
-        <td>${formatDate(booking.date)}</td>
+        <td>
+          ${booking.resource}<br>
+          <small>${booking.bookingType}</small>
+        </td>
+        <td>
+          ${formatDate(booking.date)}
+          ${booking.isRecurring ? `<br><small>Until ${formatDate(booking.endDate)}</small>` : ""}
+        </td>
         <td>${booking.startTime} - ${booking.endTime}</td>
         <td>${booking.purpose}</td>
         <td>
@@ -199,8 +208,17 @@ function renderMyBookings() {
         <td>
           <div class="booking-action-buttons">
             <button class="table-btn" onclick="viewBooking('${booking.id}')">View</button>
-            <button class="table-btn" onclick="openEditBooking('${booking.id}')">Modify</button>
-            <button class="table-btn" onclick="openCancelBooking('${booking.id}')">Cancel</button>
+            ${
+              booking.isRecurring
+                ? `
+                  <button class="table-btn locked-policy">Recurring</button>
+                  <button class="table-btn" onclick="openCancelBooking('${booking.id}')">Cancel</button>
+                `
+                : `
+                  <button class="table-btn" onclick="openEditBooking('${booking.id}')">Modify</button>
+                  <button class="table-btn" onclick="openCancelBooking('${booking.id}')">Cancel</button>
+                `
+            }
           </div>
         </td>
       </tr>
@@ -209,8 +227,8 @@ function renderMyBookings() {
 }
 
 function updateDashboardCounts() {
-  const upcoming = bookings.filter(booking => booking.status === "Confirmed").length;
-  const pending = bookings.filter(booking => booking.status === "Pending Approval").length;
+  const upcoming = bookings.filter(booking => booking.status.trim() === "Confirmed").length;
+  const pending = bookings.filter(booking => booking.status.trim() === "Pending Approval").length;
   const unreadNotifications = notifications.filter(notification => !notification.read).length;
 
   const upcomingCount = document.getElementById("upcomingCount");
@@ -236,19 +254,35 @@ function viewBooking(bookingId) {
 
   if (!booking) return;
 
-  details.innerHTML = `
-    <strong>Booking ID:</strong> ${booking.id}<br>
-    <strong>Booking Type:</strong> ${booking.bookingType || "Normal Booking"}<br>
-    <strong>Resource:</strong> ${booking.resource}<br>
-    <strong>Date:</strong> ${formatDate(booking.date)}<br>
-    <strong>Time:</strong> ${booking.startTime} - ${booking.endTime}<br>
-    <strong>Purpose:</strong> ${booking.purpose}<br>
-    <strong>Attendees:</strong> ${booking.attendees}<br>
-    <strong>Status:</strong> ${booking.status}<br>
-    <strong>Requirements:</strong> ${booking.requirements || "None"}<br>
-    <strong>QR Code:</strong> ${booking.qrCode || "Not generated yet"}<br>
-    <strong>Check-in Status:</strong> ${booking.checkInStatus || "Not checked-in"}
-  `;
+  if (booking.isRecurring) {
+    details.innerHTML = `
+      <strong>Request ID:</strong> ${booking.id}<br>
+      <strong>Booking Type:</strong> Recurring Booking<br>
+      <strong>Resource:</strong> ${booking.resource}<br>
+      <strong>Repeat Type:</strong> ${booking.repeatType}<br>
+      <strong>Repeat Day:</strong> ${booking.repeatDay}<br>
+      <strong>Date Range:</strong> ${formatDate(booking.date)} - ${formatDate(booking.endDate)}<br>
+      <strong>Time:</strong> ${booking.startTime} - ${booking.endTime}<br>
+      <strong>Purpose:</strong> ${booking.purpose}<br>
+      <strong>Status:</strong> ${booking.status}<br>
+      <strong>Requirements:</strong> ${booking.requirements || "None"}<br>
+      <strong>QR Code:</strong> Not available until recurring request is approved
+    `;
+  } else {
+    details.innerHTML = `
+      <strong>Booking ID:</strong> ${booking.id}<br>
+      <strong>Booking Type:</strong> Normal Booking<br>
+      <strong>Resource:</strong> ${booking.resource}<br>
+      <strong>Date:</strong> ${formatDate(booking.date)}<br>
+      <strong>Time:</strong> ${booking.startTime} - ${booking.endTime}<br>
+      <strong>Purpose:</strong> ${booking.purpose}<br>
+      <strong>Attendees:</strong> ${booking.attendees}<br>
+      <strong>Status:</strong> ${booking.status}<br>
+      <strong>Requirements:</strong> ${booking.requirements || "None"}<br>
+      <strong>QR Code:</strong> ${booking.qrCode || "Not generated yet"}<br>
+      <strong>Check-in Status:</strong> ${booking.checkInStatus || "Not checked-in"}
+    `;
+  }
 
   modal.style.display = "flex";
 }
@@ -314,11 +348,16 @@ function loadResourcesFromDatabase() {
 }
 
 function loadBookingsFromDatabase() {
-  fetch("get_bookings.php?userID=1")
-    .then(response => response.json())
-    .then(data => {
-      if (data.success === true) {
-        bookings = data.bookings.map(item => ({
+  Promise.all([
+    fetch("get_bookings.php?userID=1").then(response => response.json()),
+    fetch("get_recurring_bookings.php?userID=1").then(response => response.json())
+  ])
+    .then(([normalData, recurringData]) => {
+      let normalBookings = [];
+      let recurringBookings = [];
+
+      if (normalData.success === true) {
+        normalBookings = normalData.bookings.map(item => ({
           id: "BK-FS-" + item.bookingID,
           databaseId: item.bookingID,
           bookingType: "Normal Booking",
@@ -333,13 +372,42 @@ function loadBookingsFromDatabase() {
           status: item.status,
           qrCode: item.qrCode,
           checkInStatus: item.checkInStatus,
-          cancellationReason: item.cancellationReason
+          cancellationReason: item.cancellationReason,
+          isRecurring: false
         }));
-
-        refreshTables();
-      } else {
-        console.error(data.message);
       }
+
+      if (recurringData.success === true) {
+        recurringBookings = recurringData.recurringBookings.map(item => ({
+          id: "RB-FS-" + item.recurringID,
+          databaseId: item.recurringID,
+          bookingType: "Recurring Booking",
+          resourceID: item.resourceID,
+          resource: item.resourceName,
+          date: item.startDate,
+          endDate: item.endDate,
+          repeatType: item.repeatType,
+          repeatDay: item.repeatDay,
+          startTime: item.startTime.substring(0, 5),
+          endTime: item.endTime.substring(0, 5),
+          purpose: item.purpose,
+          attendees: "-",
+          requirements: item.requirements,
+          status: item.status,
+          qrCode: null,
+          checkInStatus: "Not available for recurring request",
+          cancellationReason: "",
+          isRecurring: true
+        }));
+      }
+
+      bookings = [...normalBookings, ...recurringBookings];
+
+      bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      console.log("All bookings loaded:", bookings);
+
+      refreshTables();
     })
     .catch(error => {
       console.error("Booking loading error:", error);
@@ -658,6 +726,11 @@ function openEditBooking(bookingId) {
 
   if (!booking) return;
 
+  if (booking.isRecurring) {
+    alert("Recurring booking requests cannot be modified here.");
+    return;
+  }
+
   if (booking.status === "Cancelled") {
     alert("Cancelled bookings cannot be modified.");
     return;
@@ -782,10 +855,19 @@ function confirmCancelBooking() {
   if (!booking) return;
 
   const formData = new FormData();
-  formData.append("bookingID", booking.databaseId);
-  formData.append("reason", reason);
+  let phpFile = "";
 
-  fetch("cancel_booking.php", {
+  if (booking.isRecurring) {
+    phpFile = "cancel_recurring_booking.php";
+    formData.append("recurringID", booking.databaseId);
+    formData.append("reason", reason);
+  } else {
+    phpFile = "cancel_booking.php";
+    formData.append("bookingID", booking.databaseId);
+    formData.append("reason", reason);
+  }
+
+  fetch(phpFile, {
     method: "POST",
     body: formData
   })
@@ -820,6 +902,7 @@ function loadQRBookingOptions() {
   select.innerHTML = `<option value="">Select confirmed booking</option>`;
 
   const confirmedBookings = bookings.filter(booking =>
+    !booking.isRecurring &&
     booking.status.trim().toLowerCase() === "confirmed"
   );
 
@@ -1070,6 +1153,8 @@ function submitRecurringBooking(event) {
         `;
 
         alert(data.message);
+
+        loadBookingsFromDatabase();
         loadNotificationsFromDatabase();
       } else {
         result.innerHTML = `
