@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Faculty & Staff Dashboard</title>
+
+  <link rel="stylesheet" href="faculty-staff-style.css" />
+</head>
+
+<body>
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="logo-area brand-sidebar">
+        <div class="brand-circle">
+          <svg class="brand-icon" viewBox="0 0 24 24">
+            <path d="M3 8L12 3L21 8L12 13L3 8Z"></path>
+            <path d="M7 10.5V15.5C7 17 9.5 18.5 12 18.5C14.5 18.5 17 17 17 15.5V10.5"></path>
+            <path d="M21 8V14"></path>
+          </svg>
+        </div>
+
+        <div>
+          <h2>Campus Resource</h2>
+          <p>Booking</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <button class="menu-btn active" onclick="showPage('dashboard', this)">
+          <svg class="menu-icon" viewBox="0 0 24 24">
+            <path d="M3 11L12 3L21 11"></path>
+            <path d="M5 10V21H10V15H14V21H19V10"></path>
+          </svg>
+          <span>Dashboard</span>
+        </button>
+
+        <button class="menu-btn" onclick="showPage('search', this)">
+          <svg class="menu-icon" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M16.5 16.5L21 21"></path>
+          </svg>
+          <span>Search Resources</span>
+        </button>
+
+        <button class="menu-btn" onclick="showPage('create', this)">
+          <svg class="menu-icon" viewBox="0 0 24 24">
+            <path d="M7 3V7"></path>
+            <path d="M17 3V7"></path>
+            <path d="M4 9H20"></path>
+            <rect x="4" y="5" width="16" height="16" rx="2"></rect>
+            <path d="M12 13V18"></path>
+            <path d="M9.5 15.5H14.5"></path>
+          </svg>
+          <span>Create Booking</span>
+        </button>
+
+        <button class="menu-btn" onclick="showPage('recurring', this)">
+          <svg class="menu-icon" viewBox="0 0 24 24">
+            <path d="M17 1L21 5L17 9"></path>
+            <path d="M3 11V9A4 4 0 0 1 7 5H21"></path>
+            <path d="M7 23L3 19L7 15"></path>
+            <path d="M21 13V15A4 4 0 0 1 17 19H3"></path>
+          </svg>
+          <span>Recurring Booking</span>
+        </button>
+
+        <button class="menu-btn" onclick="showPage('bookings', this)">
+          <svg class="menu-icon" viewBox="0 0 24 24">
+            <path d="M7 3H17L21 7V21H7V3Z"></path>
+            <path d="M17 3V8H21"></path>
+            <path d="M3 7V23H17"></path>
+            <path d="M10 13H18"></path>
+            <path d="M10 17H16"></path>
+          </svg>
+          <span>My Bookings</span>
+        </button>
+
+        <button class="menu-btn" onclick="showPage('qr', this)">
+          <svg class="menu-icon" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+            <path d="M14 14H17V17H14Z"></path>
+            <path d="M18 14H21V21H18"></path>
+            <path d="M14 18H16V21H14"></path>
+          </svg>
+          <span>QR Verification</span>
+        </button>
+
+        <button class="menu-btn" onclick="showPage('notifications', this)">
+          <svg class="menu-icon" viewBox="0 0 24 24">
+            <path d="M18 15V10A6 6 0 0 0 6 10V15L4 18H20L18 15Z"></path>
+            <path d="M10 21H14"></path>
+          </svg>
+          <span>Notifications</span>
+        </button>
+      </nav>
+
+      <button class="logout-btn" onclick="logoutUser()">
+        <svg class="menu-icon" viewBox="0 0 24 24">
+          <path d="M10 17L15 12L10 7"></path>
+          <path d="M15 12H3"></path>
+          <path d="M13 3H21V21H13"></path>
+        </svg>
+        <span>Log Out</span>
+      </button>
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="search-area">
+          <input id="searchInput" type="text" placeholder="Search booking ID, resource, or room..." />
+          <button onclick="searchItem()">Search</button>
+        </div>
+
+        <div class="profile-area">
+          <button class="notification-btn" onclick="showPageById('notifications')" aria-label="Notifications">
+            <svg class="bell-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 17H9m9-2V10a6 6 0 0 0-12 0v5l-1.5 2h15L18 15Z"></path>
+              <path d="M10 20a2 2 0 0 0 4 0"></path>
+            </svg>
+            <span class="notification-dot"></span>
+          </button>
+
+          <div class="avatar">FS</div>
+          <span>Faculty & Staff</span>
+        </div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section id="dashboard" class="page active-page">
+        <div class="welcome-row">
+          <div>
+            <h1>Faculty & Staff Dashboard</h1>
+            <p>Select an option to manage your bookings and campus resources.</p>
+          </div>
+
+          <button class="primary-btn" onclick="showPageById('create')">+ Create New Booking</button>
+        </div>
+
+        <section class="admin-style-grid">
+          <div class="admin-style-card" onclick="showPageById('search')">
+            <div class="admin-style-icon">
+              <svg class="dashboard-svg-icon" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="M16.5 16.5L21 21"></path>
+              </svg>
+            </div>
+            <h3>Search Resources</h3>
+            <p>Find classrooms, labs, meeting rooms, studios and equipment.</p>
+          </div>
+
+          <div class="admin-style-card" onclick="showPageById('create')">
+            <div class="admin-style-icon">
+              <svg class="dashboard-svg-icon" viewBox="0 0 24 24">
+                <path d="M7 3V7"></path>
+                <path d="M17 3V7"></path>
+                <path d="M4 9H20"></path>
+                <rect x="4" y="5" width="16" height="16" rx="2"></rect>
+                <path d="M12 13V18"></path>
+                <path d="M9.5 15.5H14.5"></path>
+              </svg>
+            </div>
+            <h3>Create Booking</h3>
+            <p>Create a new booking request for campus resources.</p>
+          </div>
+
+          <div class="admin-style-card" onclick="showPageById('bookings')">
+            <div class="admin-style-icon">
+              <svg class="dashboard-svg-icon" viewBox="0 0 24 24">
+                <path d="M7 3H17L21 7V21H7V3Z"></path>
+                <path d="M17 3V8H21"></path>
+                <path d="M3 7V23H17"></path>
+                <path d="M10 13H18"></path>
+                <path d="M10 17H16"></path>
+              </svg>
+            </div>
+            <h3>My Bookings</h3>
+            <p>View, modify or cancel your existing bookings.</p>
+          </div>
+
+          <div class="admin-style-card" onclick="showPageById('qr')">
+            <div class="admin-style-icon">
+              <svg class="dashboard-svg-icon" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <path d="M14 14H17V17H14Z"></path>
+                <path d="M18 14H21V21H18"></path>
+                <path d="M14 18H16V21H14"></path>
+              </svg>
+            </div>
+            <h3>QR Verification</h3>
+            <p>Generate and verify QR codes for confirmed bookings.</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Current Bookings</h2>
+            <button class="small-btn" onclick="showPageById('bookings')">View All</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Resource</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardBookingTable"></tbody>
+          </table>
+        </section>
+      </section>
+
+      <!-- SEARCH RESOURCES -->
+      <section id="search" class="page">
+        <div class="welcome-row">
+          <div>
+            <h1>Search Resources</h1>
+            <p>Search for available classrooms, labs, meeting rooms, studios, and equipment.</p>
+          </div>
+
+          <button class="primary-btn" onclick="showPageById('dashboard')">Back to Dashboard</button>
+        </div>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Search Criteria</h2>
+          </div>
+
+          <div class="search-form-grid">
+            <div class="form-group">
+              <label>Resource Type</label>
+              <select id="resourceType">
+                <option value="">All Types</option>
+                <option value="Classroom">Classroom</option>
+                <option value="Computer Lab">Computer Lab</option>
+                <option value="Meeting Room">Meeting Room</option>
+                <option value="Studio">Studio</option>
+                <option value="Equipment">Equipment</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Location</label>
+              <select id="resourceLocation">
+                <option value="">All Locations</option>
+                <option value="Block A">Block A</option>
+                <option value="Block B">Block B</option>
+                <option value="Block C">Block C</option>
+                <option value="Library Building">Library Building</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Date</label>
+              <input type="date" id="searchDate">
+            </div>
+
+            <div class="form-group">
+              <label>Time</label>
+              <input type="time" id="searchTime">
+            </div>
+
+            <div class="form-group">
+              <label>Minimum Capacity</label>
+              <input type="number" id="capacity" placeholder="e.g. 30">
+            </div>
+
+            <div class="form-group">
+              <label>Facilities</label>
+              <input type="text" id="facility" placeholder="Projector, WiFi, computer...">
+            </div>
+          </div>
+
+          <div class="form-buttons">
+            <button class="primary-btn" onclick="searchResources()">Search Resources</button>
+            <button class="secondary-btn" onclick="resetSearch()">Reset</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Available Resources</h2>
+            <p id="resultCount">Showing sample resources</p>
+          </div>
+
+          <div id="resourceList" class="resource-list"></div>
+        </section>
+
+        <section class="panel details-panel">
+          <div class="panel-header">
+            <h2>Resource Details</h2>
+          </div>
+
+          <div id="resourceDetails">
+            <p>Select a resource and click View Details.</p>
+          </div>
+        </section>
+      </section>
+
+      <!-- CREATE BOOKING -->
+      <section id="create" class="page">
+        <div class="welcome-row">
+          <div>
+            <h1>Create Booking</h1>
+            <p>Fill in the booking details to reserve a campus resource.</p>
+          </div>
+
+          <button class="primary-btn" onclick="showPageById('dashboard')">Back to Dashboard</button>
+        </div>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Booking Form</h2>
+          </div>
+
+          <form id="bookingForm" onsubmit="submitBooking(event)">
+            <div class="booking-form-grid">
+              <div class="form-group">
+                <label>Resource Name</label>
+                <select id="bookingResource" required>
+                  <option value="">Select resource</option>
+                  <option value="Lecture Hall A">Lecture Hall A</option>
+                  <option value="Computer Lab 2">Computer Lab 2</option>
+                  <option value="Meeting Room C">Meeting Room C</option>
+                  <option value="Design Studio">Design Studio</option>
+                  <option value="Portable Projector Set">Portable Projector Set</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Booking Date</label>
+                <input type="date" id="bookingDate" required>
+              </div>
+
+              <div class="form-group">
+                <label>Start Time</label>
+                <input type="time" id="startTime" required>
+              </div>
+
+              <div class="form-group">
+                <label>End Time</label>
+                <input type="time" id="endTime" required>
+              </div>
+
+              <div class="form-group">
+                <label>Number of Attendees</label>
+                <input type="number" id="attendees" placeholder="e.g. 40" required>
+              </div>
+
+              <div class="form-group">
+                <label>Booking Purpose</label>
+                <select id="purpose" required>
+                  <option value="">Select purpose</option>
+                  <option value="Lecture">Lecture</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Seminar">Seminar</option>
+                  <option value="Event">Event</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label>Special Requirements</label>
+                <textarea id="requirements" placeholder="Example: Need microphone, projector, extra chairs..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-buttons">
+              <button class="primary-btn" type="submit">Submit Booking</button>
+              <button class="secondary-btn" type="button" onclick="clearBookingForm()">Clear Form</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel result-panel">
+          <div class="panel-header">
+            <h2>Booking Result</h2>
+          </div>
+
+          <div id="bookingResult">
+            <p>Submit the form to see booking confirmation or pending approval status.</p>
+          </div>
+        </section>
+      </section>
+
+      <!-- MY BOOKINGS -->
+      <section id="bookings" class="page">
+        <div class="welcome-row">
+          <div>
+            <h1>My Bookings</h1>
+            <p>View, modify, or cancel your Faculty & Staff bookings.</p>
+          </div>
+
+          <button class="primary-btn" onclick="showPageById('dashboard')">Back to Dashboard</button>
+        </div>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Booking List</h2>
+            </div>
+            <p>Manage your current booking requests.</p>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Resource</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Purpose</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="myBookingsTable"></tbody>
+          </table>
+        </section>
+
+        <section id="editBookingPanel" class="panel edit-panel hidden">
+          <div class="panel-header">
+            <h2>Modify Booking</h2>
+          </div>
+
+          <form id="editBookingForm" onsubmit="saveBookingChanges(event)">
+            <input type="hidden" id="editBookingId">
+
+            <div class="booking-form-grid">
+              <div class="form-group">
+                <label>Resource Name</label>
+                <select id="editResource" required>
+                  <option value="Lecture Hall A">Lecture Hall A</option>
+                  <option value="Computer Lab 2">Computer Lab 2</option>
+                  <option value="Meeting Room C">Meeting Room C</option>
+                  <option value="Design Studio">Design Studio</option>
+                  <option value="Portable Projector Set">Portable Projector Set</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Booking Date</label>
+                <input type="date" id="editDate" required>
+              </div>
+
+              <div class="form-group">
+                <label>Start Time</label>
+                <input type="time" id="editStartTime" required>
+              </div>
+
+              <div class="form-group">
+                <label>End Time</label>
+                <input type="time" id="editEndTime" required>
+              </div>
+
+              <div class="form-group">
+                <label>Purpose</label>
+                <select id="editPurpose" required>
+                  <option value="Lecture">Lecture</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Seminar">Seminar</option>
+                  <option value="Event">Event</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Attendees</label>
+                <input type="number" id="editAttendees" required>
+              </div>
+            </div>
+
+            <div class="form-buttons">
+              <button class="primary-btn" type="submit">Save Changes</button>
+              <button class="secondary-btn" type="button" onclick="closeEditPanel()">Close</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="cancelBookingPanel" class="panel edit-panel hidden">
+          <div class="panel-header">
+            <h2>Cancel Booking</h2>
+          </div>
+
+          <input type="hidden" id="cancelBookingId">
+
+          <div class="form-group">
+            <label>Cancellation Reason</label>
+            <textarea id="cancelReason" placeholder="Enter reason for cancellation..."></textarea>
+          </div>
+
+          <div class="form-buttons">
+            <button class="danger-btn" onclick="confirmCancelBooking()">Confirm Cancel</button>
+            <button class="secondary-btn" onclick="closeCancelPanel()">Close</button>
+          </div>
+        </section>
+      </section>
+
+      <!-- RECURRING BOOKING -->
+      <section id="recurring" class="page">
+        <div class="welcome-row">
+          <div>
+            <h1>Recurring Booking</h1>
+            <p>Create weekly or monthly repeated booking requests for classes, meetings, or regular events.</p>
+          </div>
+
+          <button class="primary-btn" onclick="showPageById('dashboard')">Back to Dashboard</button>
+        </div>
+
+        <section class="panel recurring-panel">
+          <div class="panel-header">
+            <h2>Recurring Booking Request</h2>
+            <p>Fill in the details below to request a repeated booking schedule.</p>
+          </div>
+
+          <form id="recurringForm" onsubmit="submitRecurringBooking(event)">
+            <div class="booking-form-grid">
+              <div class="form-group">
+                <label>Resource Name</label>
+                <select id="recurringResource" required>
+                  <option value="">Select resource</option>
+                  <option value="Lecture Hall A">Lecture Hall A</option>
+                  <option value="Computer Lab 2">Computer Lab 2</option>
+                  <option value="Meeting Room C">Meeting Room C</option>
+                  <option value="Design Studio">Design Studio</option>
+                  <option value="Portable Projector Set">Portable Projector Set</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Repeat Type</label>
+                <select id="repeatType" required>
+                  <option value="">Select repeat type</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Monthly">Monthly</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Day</label>
+                <select id="repeatDay" required>
+                  <option value="">Select day</option>
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" id="recurringStartDate" required>
+              </div>
+
+              <div class="form-group">
+                <label>End Date</label>
+                <input type="date" id="recurringEndDate" required>
+              </div>
+
+              <div class="form-group">
+                <label>Start Time</label>
+                <input type="time" id="recurringStartTime" required>
+              </div>
+
+              <div class="form-group">
+                <label>End Time</label>
+                <input type="time" id="recurringEndTime" required>
+              </div>
+
+              <div class="form-group">
+                <label>Purpose</label>
+                <select id="recurringPurpose" required>
+                  <option value="">Select purpose</option>
+                  <option value="Lecture">Lecture</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Seminar">Seminar</option>
+                  <option value="Event">Event</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label>Special Requirements</label>
+                <textarea id="recurringRequirements" placeholder="Example: Need projector every Monday..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-buttons">
+              <button class="primary-btn" type="submit">Submit Recurring Request</button>
+              <button class="secondary-btn" type="button" onclick="clearRecurringForm()">Clear Form</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel result-panel">
+          <div class="panel-header">
+            <h2>Schedule Preview</h2>
+          </div>
+
+          <div id="recurringResult">
+            <p>Submit the recurring booking form to preview the repeated schedule request.</p>
+          </div>
+        </section>
+      </section>
+
+      <!-- QR VERIFICATION -->
+      <section id="qr" class="page">
+        <div class="welcome-row">
+          <div>
+            <h1>QR Verification</h1>
+            <p>Generate and verify QR codes for confirmed Faculty & Staff bookings.</p>
+          </div>
+
+          <button class="primary-btn" onclick="showPageById('dashboard')">Back to Dashboard</button>
+        </div>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Generate Booking QR Code</h2>
+            <p>Select a confirmed booking to generate a sample QR code.</p>
+          </div>
+
+          <div class="qr-grid">
+            <div class="form-group">
+              <label>Select Confirmed Booking</label>
+              <select id="qrBookingSelect">
+                <option value="">Select confirmed booking</option>
+              </select>
+            </div>
+
+            <div class="form-buttons qr-buttons">
+              <button class="primary-btn" onclick="generateQR()">Generate QR</button>
+              <button class="secondary-btn" onclick="clearQR()">Clear</button>
+            </div>
+          </div>
+
+          <div id="qrDisplayArea" class="qr-display-area">
+            <p>Select a confirmed booking and click Generate QR.</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Verify Booking QR Code</h2>
+            <p>Enter a sample QR code to test the verification result.</p>
+          </div>
+
+          <div class="qr-grid">
+            <div class="form-group">
+              <label>QR Code / Booking Code</label>
+              <input type="text" id="qrCodeInput" placeholder="Example: FS-VALID">
+            </div>
+
+            <div class="form-buttons qr-buttons">
+              <button class="primary-btn" onclick="verifyQR()">Verify QR</button>
+              <button class="secondary-btn" onclick="clearQRResult()">Clear Result</button>
+            </div>
+          </div>
+
+          <div class="sample-codes">
+            <p><strong>Sample test codes:</strong></p>
+            <span>FS-VALID</span>
+            <span>FS-INVALID</span>
+            <span>FS-TIME</span>
+            <span>FS-DONE</span>
+          </div>
+
+          <div id="qrResult" class="qr-result">
+            <p>Verification result will appear here.</p>
+          </div>
+        </section>
+      </section>
+
+      <!-- NOTIFICATIONS -->
+      <section id="notifications" class="page">
+        <div class="welcome-row">
+          <div>
+            <h1>Notifications</h1>
+            <p>View booking updates, approval messages, cancellation notices, and QR verification alerts.</p>
+          </div>
+
+          <button class="primary-btn" onclick="showPageById('dashboard')">Back to Dashboard</button>
+        </div>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Notification Center</h2>
+            <button class="secondary-btn" onclick="markAllNotificationsRead()">Mark All as Read</button>
+          </div>
+
+          <div id="notificationList" class="notification-list"></div>
+        </section>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="bookingModal" class="modal">
+    <div class="modal-box">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <h2>Booking Details</h2>
+      <p id="bookingDetails"></p>
+    </div>
+  </div>
+
+  <script src="faculty-staff-script.js"></script>
+</body>
+</html>
