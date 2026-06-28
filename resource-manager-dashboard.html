@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Resource Manager Dashboard</title>
+
+  <link rel="stylesheet" href="resource-manager-style.css">
+</head>
+
+<body>
+  <div class="layout">
+
+<aside class="sidebar">
+  <div class="logo-area brand-sidebar">
+    <div class="brand-circle">
+      <svg class="brand-icon" viewBox="0 0 24 24">
+        <path d="M3 8L12 3L21 8L12 13L3 8Z"></path>
+        <path d="M7 10.5V15.5C7 17 9.5 18.5 12 18.5C14.5 18.5 17 17 17 15.5V10.5"></path>
+        <path d="M21 8V14"></path>
+      </svg>
+    </div>
+
+    <div>
+      <h2>Campus Resource</h2>
+      <p>Booking</p>
+    </div>
+  </div>
+
+  <nav class="menu">
+
+    <button class="menu-btn active" onclick="showPage('dashboard', this)">
+      <span>Dashboard</span>
+    </button>
+
+    <button class="menu-btn" onclick="showPage('register', this)">
+      <span>Register Resource</span>
+    </button>
+
+    <button class="menu-btn" onclick="showPage('update', this)">
+      <span>Update Resource</span>
+    </button>
+
+    <button class="menu-btn" onclick="showPage('availability', this)">
+      <span>Manage Availability</span>
+    </button>
+
+    <button class="menu-btn" onclick="showPage('approval', this)">
+      <span>Approve Booking</span>
+    </button>
+
+    <button class="menu-btn" onclick="showPage('notifications', this)">
+      <span>Notifications</span>
+    </button>
+
+  </nav>
+
+  <section class="panel">
+
+    <div class="panel-header">
+        <h2>Search Results</h2>
+    </div>
+
+    <div id="searchResult">
+        <p>Search results will appear here.</p>
+    </div>
+
+</section>
+
+  <button class="logout-btn" onclick="logoutUser()">
+    <span>Log Out</span>
+  </button>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+
+<div class="search-area">
+<input
+id="searchInput"
+type="text"
+placeholder="Search resource name, resource ID or booking request..."
+>
+<button onclick="searchItem()">Search</button>
+</div>
+
+<div class="profile-area">
+<div class="avatar">RM</div>
+<span>Resource Manager</span>
+</div>
+
+</header>
+
+<section id="dashboard" class="page active-page">
+
+<div class="welcome-row">
+
+<div>
+<h1>Resource Manager Dashboard</h1>
+
+<p>
+Manage campus resources, monitor availability,
+and approve booking requests.
+</p>
+
+</div>
+
+<button
+class="primary-btn"
+onclick="showPageById('register')">
+
++ Register Resource
+
+</button>
+
+</div>
+
+<section class="admin-style-grid">
+
+<div id="registerCard"
+     class="admin-style-card"
+     onclick="showPageById('register')">
+
+<h3>Register Resource</h3>
+
+<p>
+Register new classrooms,
+laboratories, meeting rooms,
+or equipment.
+</p>
+
+</div>
+
+<div id="updateCard"
+     class="admin-style-card"
+     onclick="showPageById('update')">
+
+<h3>Update Resource</h3>
+
+<p>
+Modify resource name,
+capacity, location,
+or facilities.
+</p>
+
+</div>
+
+<div class="admin-style-card"
+onclick="showPageById('availability')">
+
+<h3>Manage Availability</h3>
+
+<p>
+Update schedules,
+maintenance status,
+and resource availability.
+</p>
+
+</div>
+
+<div id="approvalCard"
+     class="admin-style-card"
+     onclick="showPageById('approval')">
+
+<h3>Approve Bookings</h3>
+
+<p>
+Review booking requests
+and approve or reject them.
+</p>
+
+</div>
+
+</section>
+
+<section class="panel">
+
+<div class="panel-header">
+
+<h2>Resource Overview</h2>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Resource ID</th>
+<th>Resource</th>
+<th>Status</th>
+<th>Availability</th>
+<th>Maintenance</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="resourceTable">
+
+</tbody>
+
+</table>
+
+</section>
+
+</section>
+
+<!-- REGISTER RESOURCE -->
+<section id="register" class="page">
+
+  <div class="welcome-row">
+    <div>
+      <h1>Register Resource</h1>
+      <p>Add a new resource into the system for future bookings.</p>
+    </div>
+
+    <button class="primary-btn" onclick="showPageById('dashboard')">
+      Back to Dashboard
+    </button>
+  </div>
+
+  <section class="panel">
+    <div class="panel-header">
+      <h2>Resource Information</h2>
+    </div>
+
+    <form id="registerResourceForm" onsubmit="registerResource(event)">
+
+      <div class="booking-form-grid">
+
+        <div class="form-group">
+          <label>Resource Name</label>
+          <input type="text" id="resourceName" required>
+        </div>
+
+        <div class="form-group">
+          <label>Resource Type</label>
+          <select id="resourceType" required>
+            <option value="">Select Type</option>
+            <option>Classroom</option>
+            <option>Computer Lab</option>
+            <option>Meeting Room</option>
+            <option>Studio</option>
+            <option>Equipment</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Capacity</label>
+          <input type="number" id="resourceCapacity" required>
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="resourceLocation" required>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Features</label>
+          <textarea
+            id="resourceFeatures"
+            placeholder="Projector, Air Conditioner, WiFi, Computers..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Availability</label>
+          <select id="resourceAvailability">
+            <option>Available</option>
+            <option>Unavailable</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="form-buttons">
+        <button class="primary-btn" type="submit">
+          Register Resource
+        </button>
+
+        <button
+          class="secondary-btn"
+          type="reset">
+          Clear
+        </button>
+      </div>
+
+    </form>
+
+  </section>
+
+  <section class="panel result-panel">
+    <div class="panel-header">
+      <h2>Registration Status</h2>
+    </div>
+
+    <div id="registerResult">
+      <p>
+        Newly registered resources will appear here after submission.
+      </p>
+    </div>
+
+  </section>
+
+</section>
+
+
+
+
+
+<!-- UPDATE RESOURCE -->
+
+<section id="update" class="page">
+
+<div class="welcome-row">
+
+<div>
+
+<h1>Update Resource</h1>
+
+<p>
+Modify existing resource information.
+</p>
+
+</div>
+
+<button
+class="primary-btn"
+onclick="showPageById('dashboard')">
+
+Back to Dashboard
+
+</button>
+
+</div>
+
+<section class="panel">
+
+<div class="panel-header">
+
+<h2>Select Resource</h2>
+
+</div>
+
+<form
+id="updateResourceForm"
+onsubmit="updateResource(event)">
+
+<div class="booking-form-grid">
+
+<div class="form-group">
+
+<label>Resource</label>
+
+<select id="updateResourceSelect" required>
+
+<option value="">Select Resource</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Resource Name</label>
+
+<input
+type="text"
+id="updateName"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Capacity</label>
+
+<input
+type="number"
+id="updateCapacity"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Location</label>
+
+<input
+type="text"
+id="updateLocation"
+required>
+
+</div>
+
+<div class="form-group full-width">
+
+<label>Features</label>
+
+<textarea
+id="updateFeatures">
+
+</textarea>
+
+</div>
+
+</div>
+
+<div class="form-buttons">
+
+<button
+class="primary-btn"
+type="submit">
+
+Save Changes
+
+</button>
+
+<button
+type="reset"
+class="secondary-btn">
+
+Reset
+
+</button>
+
+</div>
+
+</form>
+
+</section>
+
+<section class="panel">
+
+<div class="panel-header">
+
+<h2>Update Result</h2>
+
+</div>
+
+<div id="updateResult">
+
+<p>
+Updated resource information
+will appear here.
+</p>
+
+</div>
+
+</section>
+
+</section>
+
+<!-- MANAGE AVAILABILITY -->
+<section id="availability" class="page">
+
+  <div class="welcome-row">
+    <div>
+      <h1>Manage Availability & Resource Status</h1>
+      <p>Update resource availability, maintenance status and operating schedule.</p>
+    </div>
+
+    <button class="primary-btn" onclick="showPageById('dashboard')">
+      Back to Dashboard
+    </button>
+  </div>
+
+  <section class="panel">
+
+    <div class="panel-header">
+      <h2>Resource Status</h2>
+    </div>
+
+    <form id="availabilityForm" onsubmit="saveAvailability(event)">
+
+      <div class="booking-form-grid">
+
+        <div class="form-group">
+          <label>Resource</label>
+          <select id="availabilityResource" required>
+            <option value="">Select Resource</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Availability</label>
+          <select id="availabilityStatus">
+            <option>Available</option>
+            <option>Unavailable</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Resource Status</label>
+          <select id="resourceStatus">
+            <option>Active</option>
+            <option>Under Maintenance</option>
+            <option>Inactive</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Available Date</label>
+          <input type="date" id="availableDate">
+        </div>
+
+        <div class="form-group">
+          <label>Start Time</label>
+          <input type="time" id="availableStart">
+        </div>
+
+        <div class="form-group">
+          <label>End Time</label>
+          <input type="time" id="availableEnd">
+        </div>
+
+      </div>
+
+      <div class="form-buttons">
+        <button class="primary-btn" type="submit">
+          Save Changes
+        </button>
+
+        <button class="secondary-btn" type="reset">
+          Reset
+        </button>
+      </div>
+
+    </form>
+
+  </section>
+
+  <section class="panel">
+
+    <div class="panel-header">
+      <h2>Status Update</h2>
+    </div>
+
+    <div id="availabilityResult">
+      <p>
+        Updated availability information will appear here.
+      </p>
+    </div>
+
+  </section>
+
+</section>
+
+
+
+
+
+<!-- APPROVE EQUIPMENT BOOKING -->
+
+<section id="approval" class="page">
+
+  <div class="welcome-row">
+
+    <div>
+      <h1>Approve Equipment Booking</h1>
+      <p>Review booking requests and approve or reject them.</p>
+    </div>
+
+    <button class="primary-btn" onclick="showPageById('dashboard')">
+      Back to Dashboard
+    </button>
+
+  </div>
+
+  <section class="panel">
+
+    <div class="panel-header">
+      <h2>Pending Booking Requests</h2>
+    </div>
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>Booking ID</th>
+          <th>Applicant</th>
+          <th>Resource</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="approvalTable">
+
+      </tbody>
+
+    </table>
+
+  </section>
+
+  <section id="approvalPanel" class="panel hidden">
+
+    <div class="panel-header">
+      <h2>Booking Decision</h2>
+    </div>
+
+    <input type="hidden" id="approvalBookingId">
+
+    <div class="form-group">
+      <label>Manager Remarks</label>
+      <textarea
+        id="approvalRemarks"
+        placeholder="Optional remarks..."
+      ></textarea>
+    </div>
+
+    <div class="form-buttons">
+
+<button
+    type="button"
+    class="primary-btn"
+    onclick="approveBooking()">
+    Approve
+</button>
+
+<button
+    type="button"
+    class="danger-btn"
+    onclick="rejectBooking()">
+    Reject
+</button>
+
+<button
+    type="button"
+    class="secondary-btn"
+    onclick="closeApprovalPanel()">
+    Close
+</button>
+
+    </div>
+
+  </section>
+
+</section>
+
+      <!-- NOTIFICATIONS -->
+<section id="notifications" class="page">
+
+    <div class="welcome-row">
+
+        <div>
+            <h1>Notifications</h1>
+            <p>
+                View resource updates, maintenance alerts,
+                booking approvals and booking rejections.
+            </p>
+        </div>
+
+        <button class="primary-btn"
+                onclick="showPageById('dashboard')">
+            Back to Dashboard
+        </button>
+
+    </div>
+
+    <section class="panel">
+
+        <div class="panel-header">
+            <h2>Notification Center</h2>
+            <button class="secondary-btn"
+                    onclick="markAllNotificationsRead()">
+                Mark All as Read
+            </button>
+        </div>
+
+        <div id="notificationList"
+             class="notification-list">
+        </div>
+
+    </section>
+
+</section>
+
+    </main>
+  </div>
+
+  <script src="resource-manager-script.js"></script>
+</body>
+</html>
