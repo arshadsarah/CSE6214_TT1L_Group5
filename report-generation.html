@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Report Generation - Campus Resource Booking</title>
+
+  <link rel="stylesheet" href="report-generation.css" />
+</head>
+<body>
+
+  <div class="dashboard-layout layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+      <div class="logo-area brand-sidebar">
+        <div class="brand-circle">
+          <svg class="brand-icon" viewBox="0 0 24 24">
+            <path d="M3 8L12 3L21 8L12 13L3 8Z"></path>
+            <path d="M7 10.5V15.5C7 17 9.5 18.5 12 18.5C14.5 18.5 17 17 17 15.5V10.5"></path>
+            <path d="M21 8V14"></path>
+          </svg>
+        </div>
+
+        <div>
+          <h2>Campus</h2>
+          <p>Resource Booking</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-menu menu">
+
+        <a href="admin-dashboard.html" class="menu-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3V10.5Z"/>
+            </svg>
+          </span>
+          Dashboard
+        </a>
+
+        <a href="admin-dashboard.html" class="menu-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M16 11c1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3 1.3 3 3 3ZM8 11c1.7 0 3-1.3 3-3S9.7 5 8 5 5 6.3 5 8s1.3 3 3 3Zm0 2c-2.7 0-5 1.4-5 3.2V19h10v-2.8C13 14.4 10.7 13 8 13Zm8 0c-.7 0-1.3.1-1.9.3 1.1.8 1.9 1.8 1.9 3V19h5v-2.8c0-1.8-2.3-3.2-5-3.2Z"/>
+            </svg>
+          </span>
+          Manage Users
+        </a>
+
+      
+
+        <a href="report-generation.html" class="menu-link active">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 13h4v8H4v-8Zm6-5h4v13h-4V8Zm6-5h4v18h-4V3Z"/>
+            </svg>
+          </span>
+          Reports
+        </a>
+
+        <a href="notification-management.html" class="menu-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 22c1.2 0 2.2-.8 2.5-2h-5c.3 1.2 1.3 2 2.5 2Zm7-6V10c0-3.1-1.6-5.6-4.5-6.3V3c0-1.4-1.1-2.5-2.5-2.5S9.5 1.6 9.5 3v.7C6.6 4.4 5 6.9 5 10v6l-2 2v1h18v-1l-2-2Z"/>
+            </svg>
+          </span>
+          Manage Notifications
+        </a>
+
+        <a href="system-monitoring.html" class="menu-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 4h18v13H3V4Zm2 2v9h14V6H5Zm3 11h8l1 3H7l1-3Zm1.5-7.5h2l1.2 2.4 1.8-4.4 1.5 3h2v2h-3.2l-.9-1.8-1.8 4.3-1.7-3.5H9.5v-2Z"/>
+            </svg>
+          </span>
+          System Monitoring
+        </a>
+
+      
+
+        <a href="login.html" class="menu-link logout-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M10 3H4v18h6v-2H6V5h4V3Zm6.6 5.4L15.2 9.8 17.4 12H9v2h8.4l-2.2 2.2 1.4 1.4L21.2 13l-4.6-4.6Z"/>
+            </svg>
+          </span>
+          Log out
+        </a>
+
+      </nav>
+    </aside>
+
+    <!-- Notification Bell 
+     <button 
+  class="notification-btn" 
+  type="button" 
+  onclick="openNotificationPage()"
+  aria-label="Notifications"
+>
+  <svg class="bell-icon" viewBox="0 0 24 24">
+    <path d="M15 17H9m9-2V10a6 6 0 0 0-12 0v5l-1.5 2h15L18 15Z"></path>
+    <path d="M10 20a2 2 0 0 0 4 0"></path>
+  </svg>
+  <span class="notification-dot" id="notificationDot"></span>
+</button> -->
+
+    <!-- Main Content -->
+    <main class="main-area main">
+
+      <!-- Top Header -->
+      <header class="top-header">
+
+        <div class="search-area">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search by ID, type, status, or admin..."
+          />
+          <button 
+            type="button" 
+            onclick="document.getElementById('searchInput').dispatchEvent(new Event('input'))"
+          >
+            Search
+          </button>
+        </div>
+
+        <div class="profile-area" id="adminDropdown">
+
+          <button 
+            class="notification-btn" 
+            type="button" 
+            onclick="window.location.href='notification-management.html'"
+            aria-label="Notifications"
+          >
+            <svg class="bell-icon" viewBox="0 0 24 24">
+              <path d="M15 17H9m9-2V10a6 6 0 0 0-12 0v5l-1.5 2h15L18 15Z"></path>
+              <path d="M10 20a2 2 0 0 0 4 0"></path>
+            </svg>
+            <span class="notification-dot" id="notificationDot"></span>
+          </button>
+
+          <div class="avatar">AD</div>
+
+          <span>Admin</span>
+
+          <button id="dropdownBtn" class="profile-arrow" type="button">⌄</button>
+
+          <div class="dropdown-menu" id="dropdownMenu">
+            <a href="#">Profile</a>
+            <a href="#">Settings</a>
+            <a href="login.html">Logout</a>
+          </div>
+
+        </div>
+
+      </header>
+
+      <!-- Page Title -->
+      <section class="page-title">
+        <h1>Report Generation</h1>
+        <p>Generate, view, download, and manage campus booking reports.</p>
+      </section>
+
+      <!-- Stats -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <h3 id="totalReports">0</h3>
+          <p>Total Reports</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="generatedReports">0</h3>
+          <p>Generated</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="pendingReports">0</h3>
+          <p>Pending</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="totalBookings">0</h3>
+          <p>Total Bookings</p>
+        </div>
+      </section>
+
+      <!-- Generate Report Form -->
+      <section class="form-card">
+        <h2>Generate New Report</h2>
+
+        <form id="reportForm" novalidate>
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="reportType">Report Type</label>
+              <select id="reportType">
+                <option value="">Select report type</option>
+                <option value="Booking Summary">Booking Summary</option>
+                <option value="Resource Usage">Resource Usage</option>
+                <option value="User Activity">User Activity</option>
+                <option value="Maintenance Report">Maintenance Report</option>
+              </select>
+              <p class="error" id="reportTypeError"></p>
+            </div>
+
+            <div class="field">
+              <label for="startDate">Start Date</label>
+              <input type="date" id="startDate" />
+              <p class="error" id="startDateError"></p>
+            </div>
+
+            <div class="field">
+              <label for="endDate">End Date</label>
+              <input type="date" id="endDate" />
+              <p class="error" id="endDateError"></p>
+            </div>
+
+            <div class="field">
+              <label for="reportStatus">Status</label>
+              <select id="reportStatus">
+                <option value="">Select status</option>
+                <option value="Generated">Generated</option>
+                <option value="Pending">Pending</option>
+              </select>
+              <p class="error" id="reportStatusError"></p>
+            </div>
+
+            <div class="field">
+              <label for="generatedBy">Generated By</label>
+              <input type="text" id="generatedBy" placeholder="Example: Admin" />
+              <p class="error" id="generatedByError"></p>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="primary-btn">Generate Report</button>
+            <button type="button" class="secondary-btn" id="clearFormBtn">Clear</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Report Table -->
+      <section class="table-card">
+        <div class="table-header">
+          <h2>Generated Reports</h2>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Report ID</th>
+                <th>Report Type</th>
+                <th>Date Range</th>
+                <th>Generated By</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="reportTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- View Report Modal -->
+  <div class="modal" id="reportModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2>Report Details</h2>
+        <button type="button" id="closeModal">×</button>
+      </div>
+
+      <div id="reportDetails"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="report-generation.js"></script>
+</body>
+</html>

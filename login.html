@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Campus Resource Booking</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+  <main class="shell">
+    
+    <!-- Left Brand Panel -->
+    <section class="brand-panel" aria-label="Campus Resource Booking information">
+      <div class="crest">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3 1.5 8.2 12 13l8.5-3.9V15h2V8.2L12 3Zm0 12.1L5 11.9V15c0 2.1 3.1 4 7 4s7-1.9 7-4v-3.1l-7 3.2Z"/>
+        </svg>
+      </div>
+
+      <h1 class="brand-title">Campus Resource Booking</h1>
+      <p class="brand-tagline">Streamline. Reserve. Succeed.</p>
+
+      <svg class="illustration" viewBox="0 0 420 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <ellipse cx="210" cy="210" rx="170" ry="11" fill="#ded7dd"/>
+        <rect x="120" y="75" width="180" height="122" rx="4" fill="#e3b8c2"/>
+        <rect x="165" y="48" width="90" height="32" rx="3" fill="#d89aac"/>
+        <polygon points="155,48 210,18 265,48" fill="#7a1530"/>
+        <rect x="205" y="0" width="4" height="22" fill="#7a1530"/>
+        <polygon points="209,3 229,10 209,17" fill="#7a1530"/>
+        <circle cx="210" cy="62" r="12" fill="#fff" stroke="#7a1530" stroke-width="2"/>
+        <line x1="210" y1="62" x2="210" y2="54" stroke="#7a1530" stroke-width="1.6"/>
+        <line x1="210" y1="62" x2="217" y2="65" stroke="#7a1530" stroke-width="1.6"/>
+        <rect x="142" y="102" width="22" height="30" fill="#fff" rx="2"/>
+        <rect x="257" y="102" width="22" height="30" fill="#fff" rx="2"/>
+        <rect x="198" y="150" width="24" height="47" fill="#fff" rx="12"/>
+        <circle cx="75" cy="157" r="28" fill="#b95a6e"/>
+        <rect x="70" y="157" width="10" height="42" fill="#8a3c4d"/>
+        <circle cx="342" cy="160" r="25" fill="#b95a6e"/>
+        <rect x="337" y="160" width="10" height="40" fill="#8a3c4d"/>
+      </svg>
+    </section>
+
+    <!-- Right Login Form Panel -->
+    <section class="form-panel">
+      <div class="form-inner">
+        <a class="back-link" href="role.html">← Change Role</a>
+
+        <div class="login-lock" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 9V7a5 5 0 0 0-10 0v2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-2ZM9 7a3 3 0 0 1 6 0v2H9V7Zm4 8.73V18h-2v-2.27a2 2 0 1 1 2 0Z"/>
+          </svg>
+        </div>
+
+        <h1>Welcome Back!</h1>
+        <p class="subtitle">Sign in to access your dashboard</p>
+        <p class="selected-role" id="selectedRoleText">Role: Not selected</p>
+
+        <div class="form-alert" id="formAlert"></div>
+
+        <form id="loginForm" novalidate>
+
+          <!-- Username Field -->
+          <div class="field">
+            <label for="username">Username</label>
+            <div class="input-wrap" id="usernameWrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.2-8 5v3h16v-3c0-2.8-3.6-5-8-5Z"/>
+                </svg>
+              </span>
+              <input 
+                type="text" 
+                id="username" 
+                placeholder="Enter Username" 
+                maxlength="30" 
+                autocomplete="username" 
+              />
+            </div>
+            <p class="error-message" id="usernameError"></p>
+          </div>
+
+          <!-- Email Field -->
+          <div class="field">
+            <label for="email">Email</label>
+            <div class="input-wrap" id="emailWrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+                </svg>
+              </span>
+              <input 
+                type="email" 
+                id="email" 
+                placeholder="Enter Email" 
+                maxlength="50" 
+                autocomplete="email" 
+              />
+            </div>
+            <p class="error-message" id="emailError"></p>
+          </div>
+
+          <!-- Password Field -->
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="input-wrap" id="passwordWrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M17 9V7a5 5 0 0 0-10 0v2H5v13h14V9h-2ZM9 7a3 3 0 0 1 6 0v2H9V7Z"/>
+                </svg>
+              </span>
+
+              <input 
+                type="password" 
+                id="password" 
+                placeholder="Enter Password" 
+                maxlength="40" 
+                autocomplete="current-password" 
+              />
+
+              <button class="toggle-visibility" type="button" id="togglePassword" aria-label="Show password">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5c7 0 11 7 11 7s-4 7-11 7S1 12 1 12s4-7 11-7Zm0 2.2C7.8 7.2 4.8 10.4 3.5 12c1.3 1.6 4.3 4.8 8.5 4.8s7.2-3.2 8.5-4.8c-1.3-1.6-4.3-4.8-8.5-4.8Zm0 1.8a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z"/>
+                </svg>
+              </button>
+            </div>
+            <p class="error-message" id="passwordError"></p>
+          </div>
+
+          <div class="row-between">
+            <label class="remember">
+              <input type="checkbox" id="rememberMe" />
+              Remember me
+            </label>
+            <a href="#" id="forgotLink">Forgot Password?</a>
+          </div>
+
+          <p class="error-message center-error" id="loginRoleError"></p>
+
+          <button type="submit" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.2-8 5v3h16v-3c0-2.8-3.6-5-8-5Z"/>
+            </svg>
+            Sign In
+          </button>
+        </form>
+
+        <div class="divider">or</div>
+
+        <button type="button" class="btn btn-secondary" id="createAccountBtn">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-3.9 0-7 2-7 4.5V21h12v-3.5c0-1.5.7-2.9 1.9-3.8A11.3 11.3 0 0 0 9 13Zm11 2v3h3v2h-3v3h-2v-3h-3v-2h3v-3h2Z"/>
+          </svg>
+          Create New Account
+        </button>
+
+        <p class="footer-note">
+          Need help? Contact <a href="#" id="adminLink">System Administrator</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

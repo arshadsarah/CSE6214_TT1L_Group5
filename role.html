@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Role - Campus Resource Booking</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+  <main class="shell">
+    <section class="brand-panel" aria-label="Campus Resource Booking information">
+      <div class="crest">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3 1.5 8.2 12 13l8.5-3.9V15h2V8.2L12 3Zm0 12.1L5 11.9V15c0 2.1 3.1 4 7 4s7-1.9 7-4v-3.1l-7 3.2Z"/>
+        </svg>
+      </div>
+      <h1 class="brand-title">Campus Resource Booking</h1>
+      <p class="brand-tagline">Streamline. Reserve. Succeed.</p>
+
+      <svg class="illustration" viewBox="0 0 420 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <ellipse cx="210" cy="210" rx="170" ry="11" fill="#ded7dd"/>
+        <rect x="120" y="75" width="180" height="122" rx="4" fill="#e3b8c2"/>
+        <rect x="165" y="48" width="90" height="32" rx="3" fill="#d89aac"/>
+        <polygon points="155,48 210,18 265,48" fill="#7a1530"/>
+        <rect x="205" y="0" width="4" height="22" fill="#7a1530"/>
+        <polygon points="209,3 229,10 209,17" fill="#7a1530"/>
+        <circle cx="210" cy="62" r="12" fill="#fff" stroke="#7a1530" stroke-width="2"/>
+        <line x1="210" y1="62" x2="210" y2="54" stroke="#7a1530" stroke-width="1.6"/>
+        <line x1="210" y1="62" x2="217" y2="65" stroke="#7a1530" stroke-width="1.6"/>
+        <rect x="142" y="102" width="22" height="30" fill="#fff" rx="2"/>
+        <rect x="257" y="102" width="22" height="30" fill="#fff" rx="2"/>
+        <rect x="198" y="150" width="24" height="47" fill="#fff" rx="12"/>
+        <circle cx="75" cy="157" r="28" fill="#b95a6e"/>
+        <rect x="70" y="157" width="10" height="42" fill="#8a3c4d"/>
+        <circle cx="342" cy="160" r="25" fill="#b95a6e"/>
+        <rect x="337" y="160" width="10" height="40" fill="#8a3c4d"/>
+      </svg>
+    </section>
+
+    <section class="form-panel">
+      <div class="form-inner narrow-card">
+        <a class="back-link" href="index.html">← Back to Home</a>
+        <h1>Select Your Role</h1>
+        <p class="subtitle">Please select your role to continue</p>
+
+        <div class="form-alert" id="formAlert"></div>
+
+        <div class="role-list" id="roleList" aria-label="Role options">
+          <button class="role-option" type="button" data-role="Student">
+            <span class="role-symbol">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 1 8l11 5 8-3.64V16h2V8L12 3Zm0 12 6-2.73V16c0 2.2-3 4-6 4s-6-1.8-6-4v-3.73L12 15Z"/></svg>
+            </span>
+            <span>
+              <strong>Student</strong>
+              <small>Login as a student</small>
+            </span>
+          </button>
+
+          <button class="role-option" type="button" data-role="Staff / Faculty">
+            <span class="role-symbol">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-3.3 0-6 1.8-6 4v3h9.5a6.5 6.5 0 0 1-.5-2.5c0-1.7.65-3.25 1.7-4.4A11.7 11.7 0 0 0 9 13Zm8.5 1a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm.5 1.6v1.9h1.9v1H18v1.9h-1v-1.9h-1.9v-1H17v-1.9h1Z"/></svg>
+            </span>
+            <span>
+              <strong>Staff / Faculty</strong>
+              <small>Login as staff or faculty</small>
+            </span>
+          </button>
+
+          <button class="role-option" type="button" data-role="Resource Manager">
+            <span class="role-symbol">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm1 4v2h8V6H8Zm0 4v2h8v-2H8Zm0 4v2h5v-2H8Z"/>
+              </svg>
+            </span>
+            <span>
+              <strong>Resource Manager</strong>
+              <small>Login as resource manager</small>
+            </span>
+          </button>
+
+          <button class="role-option" type="button" data-role="Admin">
+            <span class="role-symbol">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Zm3.9 7.7-4.6 4.6-2.2-2.2-1.4 1.4 3.6 3.6 6-6-1.4-1.4Z"/></svg>
+            </span>
+            <span>
+              <strong>Admin</strong>
+              <small>Login as administrator</small>
+            </span>
+          </button>
+        </div>
+
+        <p class="error-message center-error" id="roleError"></p>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>

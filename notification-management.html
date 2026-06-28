@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Notification Management - Campus Resource Booking</title>
+
+  <link rel="stylesheet" href="notification-management.css" />
+</head>
+<body>
+
+  <div class="dashboard-layout layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+      <div class="logo-area brand-sidebar">
+        <div class="brand-circle">
+          <svg class="brand-icon" viewBox="0 0 24 24">
+            <path d="M3 8L12 3L21 8L12 13L3 8Z"></path>
+            <path d="M7 10.5V15.5C7 17 9.5 18.5 12 18.5C14.5 18.5 17 17 17 15.5V10.5"></path>
+            <path d="M21 8V14"></path>
+          </svg>
+        </div>
+
+        <div>
+          <h2>Campus</h2>
+          <p>Resource Booking</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-menu menu">
+
+        <a href="admin-dashboard.html" class="menu-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3V10.5Z"/>
+            </svg>
+          </span>
+          Dashboard
+        </a>
+
+        <a href="admin-dashboard.html" class="menu-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M16 11c1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3 1.3 3 3 3ZM8 11c1.7 0 3-1.3 3-3S9.7 5 8 5 5 6.3 5 8s1.3 3 3 3Zm0 2c-2.7 0-5 1.4-5 3.2V19h10v-2.8C13 14.4 10.7 13 8 13Zm8 0c-.7 0-1.3.1-1.9.3 1.1.8 1.9 1.8 1.9 3V19h5v-2.8c0-1.8-2.3-3.2-5-3.2Z"/>
+            </svg>
+          </span>
+          Manage Users
+        </a>
+
+      
+
+        <a href="report-generation.html" class="menu-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 13h4v8H4v-8Zm6-5h4v13h-4V8Zm6-5h4v18h-4V3Z"/>
+            </svg>
+          </span>
+          Reports
+        </a>
+
+        <a href="notification-management.html" class="menu-link active">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 22c1.2 0 2.2-.8 2.5-2h-5c.3 1.2 1.3 2 2.5 2Zm7-6V10c0-3.1-1.6-5.6-4.5-6.3V3c0-1.4-1.1-2.5-2.5-2.5S9.5 1.6 9.5 3v.7C6.6 4.4 5 6.9 5 10v6l-2 2v1h18v-1l-2-2Z"/>
+            </svg>
+          </span>
+          Manage Notifications
+        </a>
+
+        <a href="system-monitoring.html" class="menu-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 4h18v13H3V4Zm2 2v9h14V6H5Zm3 11h8l1 3H7l1-3Zm1.5-7.5h2l1.2 2.4 1.8-4.4 1.5 3h2v2h-3.2l-.9-1.8-1.8 4.3-1.7-3.5H9.5v-2Z"/>
+            </svg>
+          </span>
+          System Monitoring
+        </a>
+
+      
+
+        <a href="login.html" class="menu-link logout-link">
+          <span class="side-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M10 3H4v18h6v-2H6V5h4V3Zm6.6 5.4L15.2 9.8 17.4 12H9v2h8.4l-2.2 2.2 1.4 1.4L21.2 13l-4.6-4.6Z"/>
+            </svg>
+          </span>
+          Log out
+        </a>
+
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-area main">
+
+      <!-- Top Header -->
+      <header class="top-header">
+
+        <div class="search-area">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search by title, type, target, priority, or status..."
+          />
+          <button 
+            type="button" 
+            onclick="document.getElementById('searchInput').dispatchEvent(new Event('input'))"
+          >
+            Search
+          </button>
+        </div>
+
+        <div class="profile-area" id="adminDropdown">
+
+          <button 
+            class="notification-btn" 
+            type="button" 
+            aria-label="Notifications"
+          >
+            <svg class="bell-icon" viewBox="0 0 24 24">
+              <path d="M15 17H9m9-2V10a6 6 0 0 0-12 0v5l-1.5 2h15L18 15Z"></path>
+              <path d="M10 20a2 2 0 0 0 4 0"></path>
+            </svg>
+            <span class="notification-dot" id="notificationDot"></span>
+          </button>
+
+          <div class="avatar">AD</div>
+
+          <span>Admin</span>
+
+          <button id="dropdownBtn" class="profile-arrow" type="button">⌄</button>
+
+          <div class="dropdown-menu" id="dropdownMenu">
+            <a href="#">Profile</a>
+            <a href="#">Settings</a>
+            <a href="login.html">Logout</a>
+          </div>
+
+        </div>
+
+      </header>
+
+      <!-- Page Title -->
+      <section class="page-title">
+        <h1>Notification Management</h1>
+        <p>Create, update, send, and manage notifications for campus users.</p>
+      </section>
+
+      <!-- Stats -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <h3 id="totalNotifications">0</h3>
+          <p>Total Notifications</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="sentNotifications">0</h3>
+          <p>Sent</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="scheduledNotifications">0</h3>
+          <p>Scheduled</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="draftNotifications">0</h3>
+          <p>Draft</p>
+        </div>
+      </section>
+
+      
+
+      <!-- Create Notification Form -->
+      <section class="form-card">
+        <h2 id="formTitle">Create New Notification</h2>
+
+        <form id="notificationForm" novalidate>
+          <input type="hidden" id="editIndex" />
+
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="notificationTitle">Notification Title</label>
+              <input type="text" id="notificationTitle" placeholder="Example: Booking Reminder" />
+              <p class="error" id="notificationTitleError"></p>
+            </div>
+
+            <div class="field">
+              <label for="notificationType">Notification Type</label>
+              <select id="notificationType">
+                <option value="">Select type</option>
+                <option value="Booking Update">Booking Update</option>
+                <option value="Booking Reminder">Booking Reminder</option>
+                <option value="Maintenance Notice">Maintenance Notice</option>
+                <option value="General Announcement">General Announcement</option>
+              </select>
+              <p class="error" id="notificationTypeError"></p>
+            </div>
+
+            <div class="field">
+              <label for="targetUser">Target User</label>
+              <select id="targetUser">
+                <option value="">Select target user</option>
+                <option value="All Users">All Users</option>
+                <option value="Students">Students</option>
+                <option value="Faculty & Staff">Faculty & Staff</option>
+                <option value="Resource Managers">Resource Managers</option>
+                <option value="Administrators">Administrators</option>
+              </select>
+              <p class="error" id="targetUserError"></p>
+            </div>
+
+            <div class="field">
+              <label for="priority">Priority</label>
+              <select id="priority">
+                <option value="">Select priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+              <p class="error" id="priorityError"></p>
+            </div>
+
+            <div class="field">
+              <label for="notificationStatus">Status</label>
+              <select id="notificationStatus">
+                <option value="">Select status</option>
+                <option value="Draft">Draft</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Sent">Sent</option>
+              </select>
+              <p class="error" id="notificationStatusError"></p>
+            </div>
+
+            <div class="field">
+              <label for="scheduleDate">Schedule Date & Time</label>
+<input type="datetime-local" id="scheduleDate" />
+              <p class="error" id="scheduleDateError"></p>
+            </div>
+
+          </div>
+
+          <div class="field message-field">
+            <label for="notificationMessage">Message</label>
+            <textarea id="notificationMessage" placeholder="Write notification message here..."></textarea>
+            <p class="error" id="notificationMessageError"></p>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="primary-btn" id="saveNotificationBtn">Create Notification</button>
+            <button type="button" class="secondary-btn" id="clearFormBtn">Clear</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Notification Table -->
+      <section class="table-card">
+        <div class="table-header">
+          <h2>Notification List</h2>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Target</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="notificationTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- View Notification Modal -->
+  <div class="modal" id="notificationModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2>Notification Details</h2>
+        <button type="button" id="closeModal">×</button>
+      </div>
+
+      <div id="notificationDetails"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="notification-management.js"></script>
+</body>
+</html>
