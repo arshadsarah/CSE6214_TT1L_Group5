@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard | Campus Resource Booking System</title>
+  <link rel="stylesheet" href="student-style.css">
+</head>
+
+<body>
+
+  <aside class="sidebar">
+
+    <div class="logo-box">
+      <h2>CRBS</h2>
+      <p>Student Panel</p>
+    </div>
+
+    <nav>
+      <button class="nav-btn active" onclick="showSection('dashboard')">Dashboard</button>
+      <button class="nav-btn" onclick="showSection('search')">Search Resource</button>
+      <button class="nav-btn" onclick="showSection('book')">Book Resource</button>
+      <button class="nav-btn" onclick="showSection('history')">Booking History</button>
+      <button class="nav-btn" onclick="showSection('qr')">QR Verification</button>
+      <button class="nav-btn" onclick="showSection('notifications')">Notifications</button>
+      <button class="nav-btn logout-btn" onclick="logoutStudent()">Logout</button>
+    </nav>
+
+  </aside>
+
+  <main class="main-content">
+
+    <!-- DASHBOARD SECTION -->
+    <section id="dashboard" class="page active-page">
+
+      <div class="page-header">
+        <div>
+          <h1>Student Dashboard</h1>
+          <p>Welcome back, Student User. Manage your campus resource bookings here.</p>
+        </div>
+
+        <div class="profile-circle">
+          ST
+        </div>
+      </div>
+
+      <div class="stats-container">
+
+        <div class="stat-card">
+          <h3>Total Bookings</h3>
+          <p id="totalBookings">0</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Confirmed Bookings</h3>
+          <p id="confirmedBookings">0</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Cancelled Bookings</h3>
+          <p id="cancelledBookings">0</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Verified Check-ins</h3>
+          <p id="verifiedBookings">0</p>
+        </div>
+
+      </div>
+
+      <div class="panel">
+        <div class="section-title">
+          <h2>Recent Bookings</h2>
+          <button onclick="showSection('history')">View All</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Resource</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Check-in</th>
+            </tr>
+          </thead>
+
+          <tbody id="recentBookingTable">
+            <tr>
+              <td colspan="6">No recent bookings found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+
+    <!-- Search resource -->
+    <section id="search" class="page">
+
+      <div class="page-header simple-header">
+        <h1>Search Resource</h1>
+        <p>Search available campus resources based on type, location, capacity and facilities.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Search Criteria</h2>
+
+        <form id="searchForm">
+
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="searchType">Resource Type</label>
+              <select id="searchType">
+                <option value="">All Types</option>
+                <option value="Room">Room</option>
+                <option value="Lab">Lab</option>
+                <option value="Equipment">Equipment</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="searchLocation">Location</label>
+              <select id="searchLocation">
+                <option value="">All Locations</option>
+                <option value="Library">Library</option>
+                <option value="Faculty Block">Faculty Block</option>
+                <option value="Admin Building">Admin Building</option>
+                <option value="AV Office">AV Office</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="searchCapacity">Minimum Capacity</label>
+              <input type="number" id="searchCapacity" min="1" placeholder="Example: 5">
+            </div>
+
+            <div class="form-group">
+              <label for="searchFeature">Facility / Feature</label>
+              <input type="text" id="searchFeature" placeholder="Example: projector">
+            </div>
+
+          </div>
+
+          <button type="button" onclick="searchResources()">Search</button>
+          <button type="button" class="secondary-btn" onclick="resetSearch()">Reset</button>
+
+        </form>
+      </div>
+
+      <div class="two-column">
+
+        <div class="panel">
+          <div class="section-title">
+            <h2>Available Resources</h2>
+            <span id="resourceCount">0 resources</span>
+          </div>
+
+          <div id="resourceList">
+            <p>No resources loaded yet.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Resource Details</h2>
+
+          <div id="resourceDetails" class="empty-box">
+            Select a resource to view its details.
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Book resource -->
+    <section id="book" class="page">
+
+      <div class="page-header simple-header">
+        <h1>Book Resource</h1>
+        <p>Create a new booking request for an available campus resource.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Booking Form</h2>
+
+        <form id="bookingForm">
+
+          <div class="form-group">
+            <label for="bookingResource">Resource</label>
+            <select id="bookingResource" required>
+              <option value="">Select resource</option>
+            </select>
+          </div>
+
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="bookingDate">Booking Date</label>
+              <input type="date" id="bookingDate" required>
+            </div>
+
+            <div class="form-group">
+              <label for="startTime">Start Time</label>
+              <input type="time" id="startTime" required>
+            </div>
+
+            <div class="form-group">
+              <label for="endTime">End Time</label>
+              <input type="time" id="endTime" required>
+            </div>
+
+            <div class="form-group">
+              <label for="attendees">Number of Attendees</label>
+              <input type="number" id="attendees" min="1" required>
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label for="purpose">Purpose</label>
+            <select id="purpose" required>
+              <option value="">Select purpose</option>
+              <option value="Group Discussion">Group Discussion</option>
+              <option value="Project Work">Project Work</option>
+              <option value="Revision Session">Revision Session</option>
+              <option value="Presentation Practice">Presentation Practice</option>
+              <option value="Club Activity">Club Activity</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="requirement">Special Requirement</label>
+            <textarea id="requirement" placeholder="Example: Need projector or whiteboard marker"></textarea>
+          </div>
+
+          <button type="button" onclick="createBooking()">Submit Booking</button>
+          <button type="reset" class="secondary-btn" onclick="clearBookingForm()">Clear</button>
+
+        </form>
+
+        <div id="bookingMessage" class="message-box">
+          Booking result will appear here.
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Booking history-->
+    <section id="history" class="page">
+
+      <div class="page-header simple-header">
+        <h1>Booking History</h1>
+        <p>View your booking records and cancel bookings when necessary.</p>
+      </div>
+
+      <div class="panel notice">
+        <strong>Booking Policy:</strong>
+        Students may cancel a booking before the booking starts. In the full system, this can follow the 24-hour cancellation policy.
+      </div>
+
+      <div class="panel">
+        <h2>My Bookings</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Resource</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Purpose</th>
+              <th>Status</th>
+              <th>Check-in</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="bookingHistoryTable">
+            <tr>
+              <td colspan="8">No booking history found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- QR verification -->
+    <section id="qr" class="page">
+
+      <div class="page-header simple-header">
+        <h1>QR-Based Booking Verification</h1>
+        <p>Generate and verify QR code for confirmed bookings.</p>
+      </div>
+
+    <div class="qr-grid">
+
+        <div class="panel">
+          <h2>Generate QR Code</h2>
+
+          <div class="form-group">
+            <label for="qrBookingSelect">Select Confirmed Booking</label>
+            <select id="qrBookingSelect">
+              <option value="">Select booking</option>
+            </select>
+          </div>
+
+          <button type="button" onclick="generateQR()">Generate QR</button>
+          <button type="button" class="secondary-btn" onclick="clearQR()">Clear</button>
+
+          <div id="qrDisplay" class="qr-display-area">
+            QR details will appear here.
+          </div>
+        </div>
+
+        <div class="panel qr-verify-panel">
+            <div class="qr-verify-header">
+                <h2>Verify QR Code</h2>
+                <p>Enter the QR code text to verify the booking check-in.</p>
+            </div>
+
+            <div class="qr-info-box">
+                <div class="qr-info-icon">i</div>
+                <div>
+                    <h3>QR Verification Instruction</h3>
+                    <p>Copy the QR code text from the generated QR details and paste it below.</p>
+                    <p class="qr-example-text">Example: QR-B001</p>
+                </div>
+            </div>
+
+            <div class="qr-verify-form">
+                <div class="form-group qr-input-group">
+                    <label for="qrInput">QR Code Text</label>
+                    <input type="text" id="qrInput" placeholder="Example: QR-B001">
+                </div>
+
+                <div class="qr-action-row">
+                    <button type="button" onclick="verifyQR()">Verify QR</button>
+                    <button type="button" class="secondary-btn" onclick="clearQRResult()">Clear Result</button>
+                </div>
+            </div>
+
+            <div id="qrResult" class="qr-result">
+                <div class="qr-result-box">
+                    <p>Verification result will appear here.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </section>
+
+    <section id="notifications" class="page">
+
+      <div class="page-header simple-header">
+        <h1>Notifications</h1>
+        <p>View booking confirmation, cancellation and QR verification updates.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Notification Center</h2>
+
+        <div id="notificationList">
+          <p>No notifications found.</p>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <div id="bookingModal" class="modal">
+
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">×</button>
+
+      <h2>Booking Details</h2>
+
+      <div id="modalContent">
+        Booking details will appear here.
+      </div>
+    </div>
+
+  </div>
+
+  <script src="student-script.js"></script>
+
+</body>
+</html>

@@ -335,6 +335,6 @@ const createAccountBtn = $('createAccountBtn');
 
 if (createAccountBtn) {
   createAccountBtn.addEventListener('click', () => {
-    showToast('Account creation is handled by the administrator.');
+    window.location.href = 'student-register.html';
   });
 }
