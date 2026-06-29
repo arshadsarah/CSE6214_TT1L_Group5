@@ -1,37 +1,65 @@
 <?php
 header("Content-Type: application/json");
-require "config/db.php";
 
-$bookingID = $_POST['bookingID'] ?? null;
+include "db_connect.php";
 
-if (!$bookingID) {
+$bookingID = intval($_POST["bookingID"] ?? 0);
+
+if ($bookingID <= 0) {
     echo json_encode([
         "success" => false,
-        "message" => "Missing bookingID"
+        "message" => "Missing booking ID."
     ]);
     exit;
 }
 
-// update booking status
-$sql = "UPDATE bookings SET status = 'Rejected' WHERE bookingID = $bookingID";
+/* Get booking owner */
+$getBooking = $conn->prepare("SELECT userID FROM bookings WHERE bookingID = ?");
+$getBooking->bind_param("i", $bookingID);
+$getBooking->execute();
+$result = $getBooking->get_result();
 
-if ($conn->query($sql)) {
+if ($result->num_rows === 0) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Booking not found."
+    ]);
+    exit;
+}
 
-    // optional notification
-    $conn->query("
-        INSERT INTO notifications (userID, message, dateCreated, isRead)
-        VALUES (1, 'Your booking has been REJECTED', NOW(), 0)
+$booking = $result->fetch_assoc();
+$userID = $booking["userID"];
+
+/* Update booking status */
+$update = $conn->prepare("UPDATE bookings SET status = 'Rejected' WHERE bookingID = ?");
+$update->bind_param("i", $bookingID);
+
+if ($update->execute()) {
+
+    /* Add notification */
+    $message = "Your booking has been rejected.";
+    $type = "Approval";
+    $status = "Unread";
+
+    $notify = $conn->prepare("
+        INSERT INTO notifications (userID, bookingID, message, type, dateCreated, status)
+        VALUES (?, ?, ?, ?, NOW(), ?)
     ");
+
+    $notify->bind_param("iisss", $userID, $bookingID, $message, $type, $status);
+    $notify->execute();
 
     echo json_encode([
         "success" => true,
-        "message" => "Booking rejected"
+        "message" => "Booking rejected successfully."
     ]);
 
 } else {
     echo json_encode([
         "success" => false,
-        "message" => "Failed to reject booking"
+        "message" => "Failed to reject booking."
     ]);
 }
+
+$conn->close();
 ?>

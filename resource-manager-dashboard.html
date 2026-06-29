@@ -56,18 +56,6 @@
 
   </nav>
 
-  <section class="panel">
-
-    <div class="panel-header">
-        <h2>Search Results</h2>
-    </div>
-
-    <div id="searchResult">
-        <p>Search results will appear here.</p>
-    </div>
-
-</section>
-
   <button class="logout-btn" onclick="logoutUser()">
     <span>Log Out</span>
   </button>
@@ -199,12 +187,6 @@ and approve or reject them.
 <td colspan="6">No resources loaded yet.</td>
 </tr>
 </tbody>
-</table>
-
-<tbody id="resourceTable">
-
-</tbody>
-
 </table>
 
 </section>
@@ -477,7 +459,7 @@ will appear here.
       <h2>Resource Status</h2>
     </div>
 
-    <form id="availabilityForm" onsubmit="saveAvailability(event)">
+    <form id="availabilityForm" onsubmit="saveAvailabilityChanges(event)">
 
       <div class="booking-form-grid">
 

@@ -260,84 +260,232 @@ function loadResourceOverview() {
 }
 
 /* =======================
-   MANAGE AVAILABILITY
+   REGISTER RESOURCE
 ======================= */
-function saveAvailabilityChanges() {
-  const resourceSelect = $("availabilityResource");
-  const availabilitySelect = $("availabilityStatus");
-  const statusSelect = $("resourceStatus");
-  const availableDate = $("availableDate");
-  const startTime = $("startTime");
-  const endTime = $("endTime");
+function registerResource(event) {
+  event.preventDefault();
 
-  if (!resourceSelect || !availabilitySelect || !statusSelect) {
-    alert("Availability form input ID is missing. Please check the HTML IDs.");
+  const name = $("resourceName").value.trim();
+  const type = $("resourceType").value.trim();
+  const capacity = $("resourceCapacity").value.trim();
+  const location = $("resourceLocation").value.trim();
+  const facilities = $("resourceFeatures").value.trim();
+  const availability = $("resourceAvailability").value.trim();
+
+  if (name === "" || type === "" || capacity === "" || location === "") {
+    alert("Please fill in all required fields.");
     return;
   }
 
-  const selectedResourceId = resourceSelect.value;
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("type", type);
+  formData.append("capacity", capacity);
+  formData.append("location", location);
+  formData.append("facilities", facilities);
+  formData.append("availability", availability);
+
+  fetch("register_resource.php", {
+    method: "POST",
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+
+      if (data.success) {
+        $("registerResourceForm").reset();
+
+        $("registerResult").innerHTML = `
+          <div class="success-result">
+            <h3>Resource Registered Successfully</h3>
+            <p>
+              <strong>${name}</strong> has been added to the system.<br>
+              Type: ${type}<br>
+              Location: ${location}<br>
+              Capacity: ${capacity}<br>
+              Availability: ${availability}
+            </p>
+          </div>
+        `;
+
+        loadResourcesFromDatabase();
+        showPageById("dashboard");
+      }
+    })
+    .catch(error => {
+      console.error("Error registering resource:", error);
+      alert("Error registering resource. Please check console.");
+    });
+}
+
+/* =======================
+   UPDATE RESOURCE
+======================= */
+function populateUpdateForm() {
+  const selectedResourceId = $("updateResourceSelect").value;
 
   if (selectedResourceId === "") {
-    alert("Please select a resource.");
+    $("updateName").value = "";
+    $("updateCapacity").value = "";
+    $("updateLocation").value = "";
+    $("updateFeatures").value = "";
     return;
   }
 
   const resource = resources.find(item => String(item.databaseId) === String(selectedResourceId));
 
   if (!resource) {
-    alert("Selected resource was not found.");
+    alert("Selected resource not found.");
     return;
   }
 
-  resource.availability = availabilitySelect.value;
-  resource.status = statusSelect.value;
-  resource.maintenanceStatus =
-    statusSelect.value === "Under Maintenance" ? "Under Maintenance" : "None";
-
-  loadResourceOverview();
-
-  const statusUpdate = $("statusUpdate");
-
-  if (statusUpdate) {
-    statusUpdate.innerHTML = `
-      <div class="success-result">
-        <h3>Availability Updated</h3>
-        <p>
-          <strong>${resource.name}</strong> has been updated successfully.<br>
-          Availability: ${resource.availability}<br>
-          Status: ${resource.status}<br>
-          Date: ${availableDate ? availableDate.value : "-"}<br>
-          Time: ${startTime ? startTime.value : "-"} - ${endTime ? endTime.value : "-"}
-        </p>
-      </div>
-    `;
-  } else {
-    alert("Availability updated successfully.");
-  }
+  $("updateName").value = resource.name;
+  $("updateCapacity").value = resource.capacity;
+  $("updateLocation").value = resource.location;
+  $("updateFeatures").value = resource.facilities;
 }
 
-/* Alternative function name, in case HTML uses this */
-function saveChanges() {
-  saveAvailabilityChanges();
+function updateResource(event) {
+  event.preventDefault();
+
+  const resourceID = $("updateResourceSelect").value;
+  const name = $("updateName").value.trim();
+  const capacity = $("updateCapacity").value.trim();
+  const location = $("updateLocation").value.trim();
+  const facilities = $("updateFeatures").value.trim();
+
+  if (resourceID === "") {
+    alert("Please select a resource to update.");
+    return;
+  }
+
+  if (name === "" || capacity === "" || location === "") {
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("resourceID", resourceID);
+  formData.append("name", name);
+  formData.append("capacity", capacity);
+  formData.append("location", location);
+  formData.append("facilities", facilities);
+
+  fetch("update_resource.php", {
+    method: "POST",
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+
+      if (data.success) {
+        $("updateResult").innerHTML = `
+          <div class="success-result">
+            <h3>Resource Updated Successfully</h3>
+            <p>
+              <strong>${name}</strong> has been updated.<br>
+              Capacity: ${capacity}<br>
+              Location: ${location}<br>
+              Facilities: ${facilities}
+            </p>
+          </div>
+        `;
+
+        loadResourcesFromDatabase();
+      }
+    })
+    .catch(error => {
+      console.error("Error updating resource:", error);
+      alert("Error updating resource. Please check Console.");
+    });
+}
+
+/* =======================
+   MANAGE AVAILABILITY
+======================= */
+function saveAvailability(event) {
+  event.preventDefault();
+
+  const resourceID = $("availabilityResource").value;
+  const availability = $("availabilityStatus").value;
+  const status = $("resourceStatus").value;
+  const availableDate = $("availableDate").value;
+  const availableStart = $("availableStart").value;
+  const availableEnd = $("availableEnd").value;
+
+  if (resourceID === "") {
+    alert("Please select a resource.");
+    return;
+  }
+
+  if (availability === "" || status === "") {
+    alert("Please fill in the availability and resource status.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("resourceID", resourceID);
+  formData.append("availability", availability);
+  formData.append("status", status);
+  formData.append("availableDate", availableDate);
+  formData.append("availableStart", availableStart);
+  formData.append("availableEnd", availableEnd);
+
+  fetch("update_availability.php", {
+    method: "POST",
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+
+      if (data.success) {
+        $("availabilityResult").innerHTML = `
+          <div class="success-result">
+            <h3>Availability Updated Successfully</h3>
+            <p>
+              Resource ID: ${resourceID}<br>
+              Availability: ${availability}<br>
+              Resource Status: ${status}<br>
+              Available Date: ${availableDate || "-"}<br>
+              Time: ${availableStart || "-"} - ${availableEnd || "-"}
+            </p>
+          </div>
+        `;
+
+        loadResourcesFromDatabase();
+      }
+    })
+    .catch(error => {
+      console.error("Error updating availability:", error);
+      alert("Error updating availability. Please check Console.");
+    });
+}
+
+/* Alternative function names, in case other buttons use old names */
+function saveAvailabilityChanges(event) {
+  saveAvailability(event);
+}
+
+function saveChanges(event) {
+  saveAvailability(event);
 }
 
 /* =======================
    PENDING BOOKINGS
 ======================= */
 function loadPendingBookings() {
-  fetch("get_bookings.php")
+  fetch("get_pending_bookings_rm.php")
     .then(response => response.json())
     .then(data => {
-      if (!data.success) return;
-
-      bookings = data.bookings || [];
-
       const table = $("approvalTable");
       if (!table) return;
 
       table.innerHTML = "";
 
-      if (bookings.length === 0) {
+      if (!data.success || !data.bookings || data.bookings.length === 0) {
         table.innerHTML = `
           <tr>
             <td colspan="7">No pending bookings found.</td>
@@ -346,12 +494,12 @@ function loadPendingBookings() {
         return;
       }
 
-      bookings.forEach(booking => {
+      data.bookings.forEach(booking => {
         table.innerHTML += `
           <tr>
             <td>${booking.bookingID}</td>
-            <td>${booking.applicantName}</td>
-            <td>${booking.resourceName}</td>
+            <td>${booking.applicantName || booking.userID || "-"}</td>
+            <td>${booking.resourceName || booking.resourceID || "-"}</td>
             <td>${booking.bookingDate}</td>
             <td>${booking.startTime} - ${booking.endTime}</td>
             <td>${booking.status}</td>
@@ -384,6 +532,24 @@ function openApproval(bookingID) {
   }
 }
 
+function closeApprovalPanel() {
+  const approvalPanel = $("approvalPanel");
+  const approvalBookingId = $("approvalBookingId");
+  const approvalRemarks = $("approvalRemarks");
+
+  if (approvalPanel) {
+    approvalPanel.classList.add("hidden");
+  }
+
+  if (approvalBookingId) {
+    approvalBookingId.value = "";
+  }
+
+  if (approvalRemarks) {
+    approvalRemarks.value = "";
+  }
+}
+
 function approveBooking() {
   const bookingID = $("approvalBookingId") ? $("approvalBookingId").value : "";
 
@@ -399,13 +565,22 @@ function approveBooking() {
     method: "POST",
     body: formData
   })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => response.text())
+    .then(text => {
+      console.log("Approve response:", text);
+
+      const data = JSON.parse(text);
+
       alert(data.message);
-      loadPendingBookings();
+
+      if (data.success) {
+        closeApprovalPanel();
+        loadPendingBookings();
+      }
     })
     .catch(error => {
       console.error("Error approving booking:", error);
+      alert("Booking was updated, but the page could not refresh properly. Please check Console.");
     });
 }
 
@@ -424,13 +599,22 @@ function rejectBooking() {
     method: "POST",
     body: formData
   })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => response.text())
+    .then(text => {
+      console.log("Reject response:", text);
+
+      const data = JSON.parse(text);
+
       alert(data.message);
-      loadPendingBookings();
+
+      if (data.success) {
+        closeApprovalPanel();
+        loadPendingBookings();
+      }
     })
     .catch(error => {
       console.error("Error rejecting booking:", error);
+      alert("Booking was updated, but the page could not refresh properly. Please check Console.");
     });
 }
 
@@ -510,9 +694,17 @@ function searchResources() {
 /* =======================
    LOGOUT
 ======================= */
-function logoutResourceManager() {
+function logoutUser() {
+  localStorage.removeItem("loggedInUser");
+  sessionStorage.clear();
+
   alert("Logged out successfully.");
   window.location.href = "login.html";
+}
+
+/* Backup name in case other button uses this */
+function logoutResourceManager() {
+  logoutUser();
 }
 
 /* =======================
@@ -534,6 +726,12 @@ function formatDate(dateText) {
 document.addEventListener("DOMContentLoaded", function () {
   loadResourcesFromDatabase();
   loadPendingBookings();
+
+  const updateSelect = $("updateResourceSelect");
+
+  if (updateSelect) {
+    updateSelect.addEventListener("change", populateUpdateForm);
+  }
 
   const saveAvailabilityBtn = $("saveAvailabilityBtn");
 

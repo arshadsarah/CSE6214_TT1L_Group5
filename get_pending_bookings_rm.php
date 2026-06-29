@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json");
-require "config/db.php";
+require "db_connect.php";
 
 $sql = "SELECT * FROM bookings WHERE status = 'Pending'";
 $result = $conn->query($sql);
